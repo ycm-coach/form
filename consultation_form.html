@@ -407,7 +407,7 @@
 
       <div class="field" id="field-email">
         <label class="field-label" for="email">メールアドレス<span class="required">必須</span></label>
-        <input type="email" id="email" name="email" placeholder="example@email.com" value="xcx-cam@mineo.ne.jp">
+        <input type="email" id="email" name="email" placeholder="example@email.com">
         <p class="error-msg">正しいメールアドレスを入力してください</p>
       </div>
     </div>
@@ -550,16 +550,41 @@ function collectData() {
   const checks = name => [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(el => el.value);
   const radio = name => document.querySelector(`input[name="${name}"]:checked`)?.value ?? '';
 
+  const beautyMap = {
+    skin: '肌質が気になっている（乾燥・ニキビ・くすみなど）',
+    body: '体型を変えたいと思っているが、なかなか続かない',
+    makeup: 'メイクやスキンケアを見直したいが何から始めたらいいかわからない',
+    habit: 'わかっているのに、つい「また明日」にしてしまう',
+  };
+  const loveMap = {
+    leaving: '離れた方がいいとわかっているのに、離れられない',
+    lonely: 'ひとりでいることが怖く、誰かそばにいないと不安',
+    chosen: 'いつも「選ばれる側」で、自分から動けない',
+    no_issue: '恋愛の悩みはとくにない',
+  };
+  const mindMap = {
+    self_blame: 'つい自分を責めてしまうことが多い',
+    tired_positive: '前向きになろうとするたびに落ちる、その繰り返しに疲れた',
+    know_not_move: '頭でわかっているのに、行動に移せない',
+    confident: '自分に自信が持てず、比べてしまうことが多い',
+  };
+  const ageMap = {
+    '20-24': '20〜24歳',
+    '25-29': '25〜29歳',
+    '30-34': '30〜34歳',
+    '35-39': '35〜39歳',
+    other: 'その他',
+  };
+
   return {
     timestamp: new Date().toLocaleString('ja-JP'),
     name: get('name'),
-    age: get('age'),
+    age: ageMap[get('age')] || get('age'),
     email: get('email'),
-    beauty: checks('beauty[]').join('、'),
-    love_status: radio('love_status'),
-    mind: checks('mind[]').join('、'),
+    beauty: checks('beauty[]').map(v => beautyMap[v] || v).join('、'),
+    love_status: loveMap[radio('love_status')] || radio('love_status'),
+    mind: checks('mind[]').map(v => mindMap[v] || v).join('、'),
     satisfaction: radio('satisfaction'),
-    goal: get('goal'),
     trigger: get('trigger'),
   };
 }
